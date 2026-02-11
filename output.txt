@@ -1,0 +1,55 @@
+========================================
+TASK 1: LOGIN
+========================================
+
+Command:
+curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d "{\"email\":\"imhimanshu1605@gmail.com\",\"password\":\"password123\"}"
+
+Response:
+{"message":"OTP sent","loginSessionId":"cenmlsz2ur9"}
+
+
+========================================
+TASK 2: VERIFY OTP
+========================================
+
+Command:
+curl -c cookies.txt -X POST http://localhost:3000/auth/verify-otp -H "Content-Type: application/json" -d "{\"loginSessionId\":\"cenmlsz2ur9\",\"otp\":\"501707\"}"
+
+Response:
+{"message":"OTP verified","sessionId":"cenmlsz2ur9"}
+
+Cookie File (cookies.txt):
+# Netscape HTTP Cookie File
+#HttpOnly_localhost     FALSE   /       FALSE   1770840923      session_token   cenmlsz2ur9
+
+
+========================================
+TASK 3: GENERATE ACCESS TOKEN
+========================================
+
+Command:
+curl -b cookies.txt -X POST http://localhost:3000/auth/token
+
+Response:
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImltaGltYW5zaHUxNjA1QGdtYWlsLmNvbSIsInNlc3Npb25JZCI6ImNlbm1sc3oydXI5IiwiaWF0IjoxNzcwODQwMDUwLCJleHAiOjE3NzA4NDA5NTB9.PvwH0O0JQbrlrUgt9cpMmbG-qWsz_4CzMleTGau_GcY","expires_in":900}
+
+
+========================================
+TASK 4: ACCESS PROTECTED ROUTE
+========================================
+
+Command:
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImltaGltYW5zaHUxNjA1QGdtYWlsLmNvbSIsInNlc3Npb25JZCI6ImNlbm1sc3oydXI5IiwiaWF0IjoxNzcwODQwMDUwLCJleHAiOjE3NzA4NDA5NTB9.PvwH0O0JQbrlrUgt9cpMmbG-qWsz_4CzMleTGau_GcY" http://localhost:3000/protected
+
+Response:
+{
+  "message": "Access granted",
+  "user": {
+    "email": "imhimanshu1605@gmail.com",
+    "sessionId": "cenmlsz2ur9",
+    "iat": 1770840050,
+    "exp": 1770840950
+  },
+  "success_flag": "FLAG-aW1oaW1hbnNodTE2MDVAZ21haWwuY29tX0NPTVBMRVRFRF9BU1NJR05NRU5U"
+}
